@@ -3,12 +3,32 @@ on:
   issue_comment:
     types: [created]
 
+name: /ota
+on:
+  issue_comment:
+    types: [created]
+
 jobs:
-  add-initial-reaction:
+  add-initial-reaction-and-get-pr-info:
     if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/ota')
     runs-on: ubuntu-latest
+    outputs:
+      pr_branch: ${{ steps.get-pr-info.outputs.head_ref }}
     steps:
-      - name: Add initial reaction to comment
+      - name: Get PR info
+        id: get-pr-info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            core.setOutput('head_ref', pullRequest.head.ref);
+            return pullRequest.head.ref;
+
+      - name: Add rocket reaction to comment
         uses: actions/github-script@v7
         with:
           script: |
@@ -20,12 +40,12 @@ jobs:
             });
 
   build-ota:
-    needs: [add-initial-reaction]
+    needs: [add-initial-reaction-and-get-pr-info]
     name: Create ota
     uses: ./.github/workflows/build-pr.yml
     with:
       triggered_by_comment: true
-      branch_name: ${{ github.event.pull_request.head.ref }}
+      branch_name: ${{ needs.add-initial-reaction-and-get-pr-info.outputs.pr_branch }}
 
   add-completion-reaction:
     needs: [build-ota]
