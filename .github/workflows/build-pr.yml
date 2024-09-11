@@ -6,12 +6,11 @@ on:
     inputs:
       triggered_by_comment:
         type: boolean
-        required: true
+        required: false
 
 jobs:
   main:
     name: Create ota commit
-    if: github.ref_name == 'main' || startsWith(github.event.head_commit.message, '[ota]') || inputs.triggered_by_comment
     runs-on: ubuntu-latest
     steps:
       - name: Print triggered_by_comment
