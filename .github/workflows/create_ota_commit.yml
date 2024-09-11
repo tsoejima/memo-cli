@@ -14,9 +14,13 @@ jobs:
         uses: ./.github/workflows/build-pr.yml
         with:
           triggered_by_comment: true
-        secrets: inherit
+
+  call-workflow:
+    runs-on: ubuntu-latest
+    needs: [main]
+    steps:
       - name: Add reaction to comment
-        uses: actions/github-script@v6
+      - uses: actions/github-script@v6
         with:
           script: |
             console.log(context.payload)
