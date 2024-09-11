@@ -16,10 +16,10 @@ jobs:
           triggered_by_comment: true
 
   call-workflow:
-      - name: Add reaction to comment
-        uses: actions/github-script@v6
-        with:
-          script: |
+    name: Add reaction to comment
+    uses: actions/github-script@v6
+    with:
+      script: |
             console.log(context.payload)
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
