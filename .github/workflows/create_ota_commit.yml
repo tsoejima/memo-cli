@@ -3,11 +3,6 @@ on:
   issue_comment:
     types: [created]
 
-name: /ota
-on:
-  issue_comment:
-    types: [created]
-
 jobs:
   add-initial-reaction-and-get-pr-info:
     if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/ota')
