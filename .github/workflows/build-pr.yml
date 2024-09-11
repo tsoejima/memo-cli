@@ -16,6 +16,10 @@ jobs:
       - name: Print triggered_by_comment
         run: |
             echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+      - name: Print current branch
+        run: |
+            echo "Current branch: ${{ github.ref }}"
+            echo "Branch name: ${{ github.ref_name }}"
   one:
     name: Create ota commit
     runs-on: macos-latest
