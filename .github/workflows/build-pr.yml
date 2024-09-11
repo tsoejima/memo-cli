@@ -6,18 +6,28 @@ on:
     inputs:
       triggered_by_comment:
         type: boolean
-        required: true
+        required: false
 
 jobs:
   main:
     name: Create ota commit
-    if: github.ref_name == 'main' || startsWith(github.event.head_commit.message, '[ota]') || inputs.triggered_by_comment
     runs-on: ubuntu-latest
     steps:
       - name: Print triggered_by_comment
         run: |
-          if [ "${{ github.event_name }}" = "workflow_call" ]; then
             echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
-          else
-            echo "Not triggered by workflow_call, no triggered_by_comment input"
-          fi
+  one:
+    name: Create ota commit
+    runs-on: macos-latest
+    steps:
+      - name: Print triggered_by_comment
+        run: |
+            echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+  tow:
+    name: Create ota commit
+    runs-on: macos-latest
+    steps:
+      - name: Print triggered_by_comment
+        run: |
+            echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+
