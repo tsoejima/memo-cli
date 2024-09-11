@@ -16,3 +16,18 @@ jobs:
       - name: Print triggered_by_comment
         run: |
             echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+  one:
+    name: Create ota commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print triggered_by_comment
+        run: |
+            echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+  tow:
+    name: Create ota commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print triggered_by_comment
+        run: |
+            echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+
