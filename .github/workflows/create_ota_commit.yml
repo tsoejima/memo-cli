@@ -14,6 +14,8 @@ jobs:
         uses: ./.github/workflows/build-pr.yml
         with:
           triggered_by_comment: true
+
+  call-workflow:
       - name: Add reaction to comment
         uses: actions/github-script@v6
         with:
