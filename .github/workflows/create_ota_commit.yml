@@ -4,25 +4,39 @@ on:
     types: [created]
 
 jobs:
-  main:
-    name: Create ota commit
+  add-initial-reaction:
     if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/ota')
-    uses: ./.github/workflows/build-pr.yml
-    with:
-      triggered_by_comment: true
-
-  add-reaction:
     runs-on: ubuntu-latest
-    needs: [main]
     steps:
-      - name: Add reaction to comment
+      - name: Add initial reaction to comment
         uses: actions/github-script@v6
         with:
           script: |
-            console.log(context.payload)
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               comment_id: context.payload.comment.id,
               content: "rocket",
+            });
+
+  build-ota:
+    needs: [add-initial-reaction]
+    name: Create ota
+    uses: ./.github/workflows/build-pr.yml
+    with:
+      triggered_by_comment: true
+
+  add-completion-reaction:
+    needs: [build-ota]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add completion reaction to comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: "hooray",
             });
