@@ -16,14 +16,17 @@ jobs:
           triggered_by_comment: true
 
   call-workflow:
-    name: Add reaction to comment
-    uses: actions/github-script@v6
-    with:
-      script: |
-            console.log(context.payload)
-            await github.rest.reactions.createForIssueComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: context.payload.comment.id,
-              content: "rocket",
-            });
+    runs-on: ubuntu-latest
+    needs: [main]
+    steps:
+      - name: Add reaction to comment
+      - uses: actions/github-script@v6
+        with:
+        script: |
+              console.log(context.payload)
+              await github.rest.reactions.createForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: context.payload.comment.id,
+                content: "rocket",
+              });
