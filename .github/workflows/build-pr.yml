@@ -1,0 +1,23 @@
+name: Build PullRequest
+
+on:
+  push:
+  workflow_call:
+    inputs:
+      triggered_by_comment:
+        type: boolean
+        required: true
+
+jobs:
+  main:
+    name: Create ota commit
+    if: if: github.ref_name == 'master' || startsWith(github.event.head_commit.message, '[ota]') || inputs.triggered_by_comment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print triggered_by_comment
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_call" ]; then
+            echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+          else
+            echo "Not triggered by workflow_call, no triggered_by_comment input"
+          fi
