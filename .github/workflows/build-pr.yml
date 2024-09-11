@@ -6,32 +6,63 @@ on:
     inputs:
       triggered_by_comment:
         type: boolean
-        required: false
+        required: true
+      branch_name:
+        type: string
+        required: true
 
 jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.set-branch.outputs.branch }}
+    steps:
+      - name: Set branch
+        id: set-branch
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "branch=${{ github.ref }}" >> $GITHUB_OUTPUT
+          else
+            echo "branch=${{ inputs.branch_name }}" >> $GITHUB_OUTPUT
+          fi
+
   main:
     name: Create ota commit
+    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - name: Print triggered_by_comment
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.setup.outputs.branch }}
+      - name: Print information
         run: |
             echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
-      - name: Print current branch
-        run: |
-            echo "Current branch: ${{ github.ref }}"
-            echo "Branch name: ${{ github.ref_name }}"
+            echo "Current branch: ${{ needs.setup.outputs.branch }}"
+            echo "Actual branch: $(git rev-parse --abbrev-ref HEAD)"
+
   one:
     name: Create ota commit
+    needs: setup
     runs-on: macos-latest
     steps:
-      - name: Print triggered_by_comment
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.setup.outputs.branch }}
+      - name: Print information
         run: |
             echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
-  tow:
-    name: Create ota commit
-    runs-on: macos-latest
-    steps:
-      - name: Print triggered_by_comment
-        run: |
-            echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+            echo "Current branch: ${{ needs.setup.outputs.branch }}"
 
+  two:
+    name: Create ota commit
+    needs: setup
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.setup.outputs.branch }}
+      - name: Print information
+        run: |
+            echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
+            echo "Current branch: ${{ needs.setup.outputs.branch }}"
