@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create ota
-        uses: ./.github/workflows/build-pr.yml@${{ needs.check_comment.outputs.pr_branch }}
+        uses: ./.github/workflows/build-pr.yml
         with:
           triggered_by_comment: true
         secrets: inherit
