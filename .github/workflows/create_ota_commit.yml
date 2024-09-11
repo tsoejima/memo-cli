@@ -20,7 +20,7 @@ jobs:
     needs: [main]
     steps:
       - name: Add reaction to comment
-      - uses: actions/github-script@v6
+        uses: actions/github-script@v6
         with:
           script: |
             console.log(context.payload)
