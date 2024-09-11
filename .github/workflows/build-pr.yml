@@ -14,9 +14,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print triggered_by_comment
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_call" ]; then
-            echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
-          else
-            echo "Not triggered by workflow_call, no triggered_by_comment input"
-          fi
+        run: echo "triggered_by_comment: ${{ inputs.triggered_by_comment }}"
